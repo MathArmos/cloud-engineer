@@ -1,0 +1,101 @@
+# Seção 3 — Deploying and implementing a cloud solution
+
+> **Domínio 3 da prova ACE.** Botar a mão na massa: criar e configurar os recursos via `gcloud`, console ou IaC.
+
+---
+
+## Subseções
+
+### 3.1 — Deploying and implementing Compute Engine resources
+**Workbook ACE — Diagnostic Questions:** 01, 02
+
+**Tópicos principais:**
+- Criação de instâncias GCE (machine types, images, disks)
+- **Cloud SQL como alternativa a VMs** quando o objetivo é apenas hospedar DB
+- **Managed Instance Groups (MIGs)** + instance templates
+- **Rolling updates de SO:**
+  - **Opportunistic** — só atualiza quando há outra operação (poupa recursos)
+  - **Proactive** — força atualização imediata
+
+**Arquivos documentados:** _(nenhum ainda)_
+
+---
+
+### 3.2 — Deploying and Implementing GKE resources
+**Workbook ACE — Diagnostic Questions:** 03
+
+**Tópicos principais:**
+- **Tipos de cluster:**
+  - **Standard** vs **Autopilot** (Autopilot = Google gerencia nodes)
+  - **Zonal** (1 zona) vs **Regional** (multi-zona, alta disponibilidade)
+  - **Private** vs **Public**
+- Node pools (separação de workloads)
+- Image types (Container-Optimized OS vs Ubuntu)
+
+**Arquivos documentados:** _(nenhum ainda)_
+
+---
+
+### 3.3 — Deploying and implementing Cloud Run and Cloud Run functions resources
+**Workbook ACE — Diagnostic Questions:** 04, 05
+
+**Tópicos principais:**
+- **Cloud Run vs App Engine vs Cloud Run functions:**
+  - Cloud Run — containers, pay-per-request, scale to zero
+  - App Engine standard — sem container, runtimes fixos
+  - App Engine flexible — containers em VMs, sem scale to zero
+  - Cloud Run functions — código curto, event-driven
+- **Triggers de Cloud Run functions com Cloud Storage:**
+  - `google.storage.object.finalize` (objeto criado/finalizado)
+  - outros eventos: delete, archive, metadataUpdate
+
+**Arquivos documentados:** _(nenhum ainda)_
+
+---
+
+### 3.4 — Deploying and implementing data solutions
+**Workbook ACE — Diagnostic Questions:** 06, 07, 08
+
+**Tópicos principais:**
+- **Buckets:** comandos `gcloud storage buckets create`, `gsutil mb`, escolha de location (regional / dual-region / multi-region)
+- **Cloud SQL HA:** `gcloud sql instances create --availability-type=REGIONAL` para failover automático
+- **Carregar dados no BigQuery:** Data Transfer Service vs `bq load` script vs streaming API vs Dataflow — escolher pelo custo/simplicidade
+
+**Arquivos documentados:** _(nenhum ainda)_
+
+---
+
+### 3.5 — Deploying and implementing networking resources
+**Workbook ACE — Diagnostic Questions:** 09
+
+**Tópicos principais:**
+- **Modos de VPC:**
+  - **Default** — criada com o projeto, subnets em todas as regiões
+  - **Auto mode** — subnets criadas automaticamente em cada região com ranges fixos
+  - **Custom mode** — você define tudo (IP ranges, subnets, regiões) → **controle total**
+- Subnets regionais, IP ranges
+
+**Arquivos documentados:** _(nenhum ainda)_
+
+---
+
+### 3.6 — Implementing resources through infrastructure as code
+**Workbook ACE — Diagnostic Questions:** 10
+
+**Tópicos principais:**
+- **Terraform — fluxo básico:**
+  - `terraform init` — baixa providers
+  - `terraform plan` — preview do que vai ser criado/mudado
+  - `terraform apply` — efetivamente cria/atualiza recursos
+  - `terraform destroy` — remove recursos
+- Conceitos: providers, state, modules
+- **Não está no exam guide oficial — opcional**
+
+**Arquivos documentados:** _(nenhum ainda)_
+
+---
+
+## Como vamos documentar
+
+Cada arquivo: conceito → por que → quando usar → armadilha de prova → exemplo `gcloud`/`kubectl`.
+Erros de DQ → [../../flashcards.md](../../flashcards.md).
