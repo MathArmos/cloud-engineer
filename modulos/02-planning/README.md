@@ -18,7 +18,8 @@
   - **Cloud Run functions:** event-driven, código curto
 - Quando cada um faz sentido (caso de uso → escolha)
 
-**Arquivos documentados:** _(nenhum ainda)_
+**Arquivos documentados:**
+- [2.1-compute-resources.md](2.1-compute-resources.md) — fundação completa (PDF M2 L7): 2 famílias, 5 serviços, tabela de pistas léxicas, DQs 01-04 resolvidas
 
 ---
 
@@ -35,7 +36,8 @@
   - **Bigtable** — NoSQL wide-column, séries temporais e analítico de alto throughput
 - Árvore de decisão "qual banco usar?"
 
-**Arquivos documentados:** _(nenhum ainda)_
+**Arquivos documentados:**
+- [2.2-data-storage.md](2.2-data-storage.md) — fundação completa (PDF M2 L7): 4 famílias (relational/NoSQL/object/warehouse), OLTP vs OLAP, storage classes, DQs 05-07 resolvidas
 
 ---
 
@@ -51,7 +53,8 @@
   - **Premium tier** (rede Google global) vs **Standard tier** (rede regional, mais barato)
 - Camadas TCP (L4 vs L7)
 
-**Arquivos documentados:** _(nenhum ainda)_
+**Arquivos documentados:**
+- [2.3-network-resources.md](2.3-network-resources.md) — fundação completa (PDF M2 L7): 5 eixos de decisão de LB, catálogo dos 10 tipos, Network Service Tiers, DQs 08-09 resolvidas
 
 ---
 
