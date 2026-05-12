@@ -176,3 +176,70 @@
   | Coldline | ~1x/trimestre | Taxa maior |
   | Archive | ~1x/ano | Taxa bem alta |
 - **Mnemônico:** "**S**empre → **N**ovamente → **C**om → **A**traso = Standard → Nearline → Coldline → Archive"
+
+---
+
+### [5.2 — Service Accounts] Quiz (2026-05-12): cenário correto para usar Service Account
+- **Acertei, mas hesitei entre A (individual GKE pods) e C (interactive analysis).**
+- **Resposta correta:** **A — individual GKE pods** (mecanismo: Workload Identity vinculando KSA ↔ GSA, sem chaves expostas)
+- **Por que C é armadilha:** "interactive" = HUMANO no teclado rodando queries / abrindo console. Humano usa **suas próprias credenciais** (`gcloud auth login`), nunca SA
+- **Por que B erra:** dados de usuário em nome do usuário → **OAuth 2.0 user credentials**, não SA
+- **Por que D erra:** devs locais → `gcloud auth application-default login` com a conta deles; distribuir chave de SA para dev é anti-padrão (vaza no Git, perde rastreabilidade)
+- **Regra-mãe:** **humano no loop → credencial humana; código/container/VM/batch → Service Account**
+- **Mnemônico:** "**I**nteractive = **I**ndivíduo (humano). **P**od = **P**rocesso (máquina)."
+
+---
+
+### [5.2 — Auth client-side] Quiz Q4 (2026-05-12): mobile app lendo Pub/Sub privado
+- **Errei (não tinha ideia, precisei de eliminação guiada).**
+- **Resposta correta:** **OAuth 2.0 user credentials** — usuário loga, consente, app recebe access token curto (1h) emitido em nome do usuário
+- **Por que as outras erram:**
+  - **API key** → só identifica projeto chamador para APIs PÚBLICAS (Maps, Translate). Não autoriza dado privado, não autentica usuário
+  - **Service account key** → embarcar chave JSON no APK = desastre. Decompilação extrai a chave, vaza para sempre
+  - **Environment provided service account** → só funciona dentro de **ambiente Google Cloud** (VM/GKE/Cloud Run via metadata server). Celular do usuário não tem metadata server
+- **Matriz mestre — onde o código roda determina a credencial:**
+  | Onde roda | Credencial |
+  |---|---|
+  | Celular/browser + dado do usuário | OAuth 2.0 user credentials |
+  | Celular/browser + API pública | API key |
+  | VM/GKE/Cloud Run/Function | Environment-provided SA |
+  | Servidor on-premises | Workload Identity Federation |
+- **Regra de ouro:** client-side **nunca** embarca secret de longa duração. Sempre token curto via OAuth
+- **Mnemônico:** "Cliente = OAuth. Servidor GCP = SA do ambiente. Nunca chave JSON em APK."
+- **Nuance arquitetural (do PDF oficial):** o app mobile **não** chama Pub/Sub diretamente. O fluxo é: Mobile → OAuth (token do usuário) → **backend seguro** → backend usa **própria SA** → Pub/Sub. A resposta da DQ continua OAuth, mas saiba que existe um backend no meio na arquitetura completa
+
+---
+
+### [5.2 — Auth interna GCP] Quiz (2026-05-12): app DENTRO do GCP autenticando em service APIs do GCP
+- **Errei porque:** escolhi "Locally stored keys" interpretando "internal to Google Cloud environment" como "minhas chaves ficam guardadas internamente no ambiente". O enunciado fala da **localização da APLICAÇÃO** (roda dentro do GCP), não da localização da chave
+- **Resposta correta:** **Temporary credentials** — tokens OAuth2 curtos (~1h) entregues pelo metadata server quando uma SA está anexada ao recurso (GCE/GKE/Cloud Run/Cloud Functions/App Engine). Rotação automática, zero secret em disco, ADC busca sozinho
+- **Por que as outras estão erradas:**
+  - **Locally stored keys** = chave JSON de SA no disco. O próprio Google diz "avoid service account keys whenever possible" — é fallback para apps **fora** do GCP que não têm metadata server. Usar dentro do GCP é trocar o seguro automático por arquivo estático sem rotação
+  - **API keys** = só **identificam** o projeto (quota/billing), não **autenticam** principal. Maioria das APIs Cloud rejeita. Não dá pra anexar role IAM a uma API key
+  - **User account credentials** = identidade de **humano** (`gcloud auth login`). Nunca pra app em produção: atrelada a pessoa, herda permissions amplas, exige fluxo interativo
+- **Sinônimo importante:** "Temporary credentials" = "Environment-provided service account" (metadata server) — terminologia varia, conceito é o mesmo
+- **Mnemônico:** "App dentro do GCP → SA anexada → metadata server → token temporário. Chave em disco só quando NÃO dá pra usar metadata server."
+- **Matriz pra decorar:**
+  | Quem? | Onde roda? | Credencial |
+  |---|---|---|
+  | Humano | Laptop | User account |
+  | App | **Dentro GCP** | **Temporary credentials (metadata server)** ✅ |
+  | App | Fora GCP | Workload Identity Federation > SA key |
+  | App público | Qualquer | API Key (só APIs que aceitam) |
+
+---
+
+### [5.1 — Custom Roles] Quiz Q5 (2026-05-12): adicionar permissions a custom role existente
+- **Errei porque:** escolhi "Delete the custom role and recreate" — pensei que recriar com novas permissions seria limpo
+- **Resposta correta:** **Editar a definição da role localmente e rodar `gcloud iam roles update`**
+- **Por que deletar/recriar quebra tudo:** todos os IAM bindings que apontavam para a role viram inválidos imediatamente. Todo principal (user/group/SA) que tinha a role **perde o acesso**. E o ID da role fica em quarentena 7-37 dias após delete — não pode reusar de cara
+- **Por que as outras erram:**
+  - "Criar nova role + migrar usuários" → trabalho duplicado, polui catálogo, janela de inconsistência
+  - "Copiar + adicionar + deletar antiga" → o passo "deletar antiga" tem o MESMO problema do B (quebra bindings)
+- **Fluxo correto:**
+  ```bash
+  gcloud iam roles describe ROLE_ID --project=PROJECT_ID --format=yaml > role.yaml
+  # editar role.yaml adicionando as novas permissions
+  gcloud iam roles update ROLE_ID --project=PROJECT_ID --file=role.yaml
+  ```
+- **Mnemônico:** "Custom role = **update**, nunca delete. Delete quebra bindings; update preserva tudo."

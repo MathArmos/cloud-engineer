@@ -35,6 +35,12 @@
 
 ---
 
+### Labs práticos (suporte à seção)
+
+- [lab-console-cloudshell.md](lab-console-cloudshell.md) — concluído em 2026-05-12 · "Working with the Google Cloud Console and Cloud Shell" (1º lab do learning path). Cobre interfaces GCP, persistência via `.profile`, `gcloud storage`, comandos-chave de Cloud Shell.
+
+---
+
 ## Como vamos documentar
 
 Para cada subseção, quando começarmos:
