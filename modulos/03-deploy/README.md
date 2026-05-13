@@ -18,7 +18,7 @@
   - **Proactive** — força atualização imediata
 
 **Arquivos documentados:**
-- [3.1-compute-engine.md](3.1-compute-engine.md) — overview do módulo Compute Engine (Essential GCP Infra Foundation): o que é CE, micro VMs, burst capability, 4 dimensões de uma VM (CPU, memória, disco, rede).
+- [3.1-compute-engine.md](3.1-compute-engine.md) — overview do módulo Compute Engine (Essential GCP Infra Foundation): o que é CE, anatomia de uma instância (5 dimensões), famílias de machine type, imagem ≠ disco ≠ instância, bloco "VM access and lifecycle" completo (acesso SSH/RDP, estados RUNNING/STOPPED/SUSPENDED/REPAIRING, reset, live migration, availability policy, shutdown timing 90s vs 30s preemptible, OS patch management, o que pode/não pode em TERMINATED), bloco "Compute Engine Pricing" completo (cobrança 1min mínimo + segundos, resource-based pricing, SUD até 30% automático, CUD 1/3 anos até 57%/70%, Preemptible vs Spot VMs, VM sizing recommendations, Free Tier). **Lab documentado:** Creating Virtual Machines (3 tasks — utility VM sem IP externo, Windows VM com RDP, custom machine type 2 vCPU + 4 GB com Debian).
 
 ---
 
