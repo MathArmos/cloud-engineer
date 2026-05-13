@@ -55,6 +55,7 @@
 
 **Arquivos documentados:**
 - [2.3-network-resources.md](2.3-network-resources.md) — fundação completa (PDF M2 L7): 5 eixos de decisão de LB, catálogo dos 10 tipos, Network Service Tiers, DQs 08-09 resolvidas
+- [2.3-vpc-fundamentals.md](2.3-vpc-fundamentals.md) — VPC theory (Essential GCP Infra Foundation M2): networks default/auto/custom, subnets, IPs internal/external, DNS, Cloud DNS, Alias IPs, gotchas
 
 ---
 
