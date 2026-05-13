@@ -17,7 +17,8 @@
   - **Opportunistic** — só atualiza quando há outra operação (poupa recursos)
   - **Proactive** — força atualização imediata
 
-**Arquivos documentados:** _(nenhum ainda)_
+**Arquivos documentados:**
+- [3.1-compute-engine.md](3.1-compute-engine.md) — overview do módulo Compute Engine (Essential GCP Infra Foundation): o que é CE, micro VMs, burst capability, 4 dimensões de uma VM (CPU, memória, disco, rede).
 
 ---
 
@@ -74,8 +75,11 @@
   - **Auto mode** — subnets criadas automaticamente em cada região com ranges fixos
   - **Custom mode** — você define tudo (IP ranges, subnets, regiões) → **controle total**
 - Subnets regionais, IP ranges
+- Firewall rules por tag/SA vs por IP
+- IPs de VM (interno obrigatório, externo opcional, alias IPs)
 
-**Arquivos documentados:** _(nenhum ainda)_
+**Arquivos documentados:**
+- [3.5-networking-resources.md](3.5-networking-resources.md) — modos de VPC, firewall por tag, IPs de VM. Quiz "Virtual Networks" (2026-05-12) resolvido (Q1 ✅, Q2 ❌, Q3 ✅).
 
 ---
 

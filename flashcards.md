@@ -229,6 +229,21 @@
 
 ---
 
+### [3.5 — Networking] Quiz "Virtual Networks" Q2 (2026-05-12): mínimo de IPs de uma VM
+- **Errei porque:** marquei "Two: one internal + one external", assumindo que toda VM precisa de IP externo para funcionar/acessar internet
+- **Correto:** **One: only an internal IP address** — externo é **opcional**
+- **Por que externo não é obrigatório:**
+  - Saída para internet (apt, docker pull, APIs) → roteada via **Cloud NAT** sem precisar de IP externo na VM
+  - Acesso admin → **IAP TCP Forwarding** (túnel autenticado) em vez de SSH/RDP no IP público
+  - Comunicação entre VMs internas → IP interno via VPC
+- **Por que as outras erram:**
+  - Two (interno + externo) → senso comum errado; externo é opcional
+  - Three (interno + externo + alias) → alias é específico (ex.: GKE pods), opcional também
+- **Padrão de produção:** VM criada com `--no-address` é o **default**. IP externo é exceção justificada.
+- **Mnemônico:** "VM precisa de endereço **interno para existir**, externo só se for **conversar com fora** — e mesmo assim NAT + IAP cobrem 90% dos casos."
+
+---
+
 ### [5.1 — Custom Roles] Quiz Q5 (2026-05-12): adicionar permissions a custom role existente
 - **Errei porque:** escolhi "Delete the custom role and recreate" — pensei que recriar com novas permissions seria limpo
 - **Resposta correta:** **Editar a definição da role localmente e rodar `gcloud iam roles update`**
