@@ -10,22 +10,33 @@
 **Workbook ACE — Diagnostic Questions:** 01 (GKE→Spanner, tipos de identidade), 02 (folder set-iam-policy, least privilege), 03 (custom role update)
 
 **Tópicos principais:**
-- **Tipos de identidade:**
-  - **Google Account** — humano com email Google
-  - **Google Workspace account** — humano em domínio gerenciado por Workspace
-  - **Cloud Identity** — Workspace sem o Workspace (só identidade)
-  - **Service Account** — identidade para aplicações/recursos (NÃO humano)
+- **5 tipos de identidade (members):**
+  - **Google Account** — humano com email associado a Google Account
+  - **Service Account** — identidade da aplicação (M2M), não humana
+  - **Google Group** — coleção nomeada de accounts/SAs (escala gerência)
+  - **Google Workspace Domain** — virtual group de todos os usuários Workspace da org
+  - **Cloud Identity Domain** — mesmas capacidades, sem os apps colaborativos (só IDaaS)
 - **Hierarquia de IAM bindings:** Org → Folder → Project → Resource (herança descendente)
+- **Regra crítica de herança:** *less restrictive parent overrides more restrictive resource* — child policy **não consegue restringir** acesso herdado
 - **Roles necessárias para gerenciar IAM em diferentes níveis:**
   - Editar IAM de um projeto: `resourcemanager.projects.setIamPolicy`
   - Editar IAM de uma pasta: `roles/resourcemanager.folderIamAdmin`
   - Editar IAM da organização: `roles/resourcemanager.organizationAdmin`
+- **Allow Policy vs Deny Policy:** deny sempre é checada **antes** da allow → vence até Owner
+- **IAM Conditions:** restringir role por `request.time`, `resource.name`, IP/access level
+- **Organization Policy ≠ IAM Policy:** IAM = "quem"; Org Policy = "que tipo de recurso pode existir" (constraints)
+- **Recommender + Policy Insights:** detecção ML de permissions não-usadas → least privilege em escala
+- **GCDS** sincroniza identidades AD/LDAP → Cloud Identity (one-way, scheduled); **SSO/SAML 2.0** autentica em tempo real
+- **Organization Restrictions:** anti-exfiltração via egress proxy. Proxy injeta header `X-Goog-Allowed-Resources`; Google valida org-alvo. Requer Cloud admin + egress proxy admin. Distinto de IAM, Org Policy e VPC SC
+- **IAM Best Practices (4):** projetos = trust boundary; auditar policy + herança; least privilege especialmente em níveis altos; auditar policies (Cloud Audit Logs) e memberships (Workspace/Cloud Identity logs)
+- **Grant roles para GRUPOS, não indivíduos** — grupos podem existir só para fins de role assignment (não só job roles). Controlar ownership do grupo
+- **Identity-Aware Proxy (IAP):** autorização central para apps HTTPS internos. Substitui VPN + firewall por IP. Role: `roles/iap.httpsResourceAccessor`. Modalidade TCP forwarding cobre SSH/RDP sem IP público
 - **Custom roles:**
   - Update local (definição YAML/JSON) + comando de update = forma recomendada
   - NÃO deletar e recriar (perde IAM bindings)
 
 **Arquivos documentados:**
-- [5.1-iam-roles.md](5.1-iam-roles.md) — Roles administrativas por nível (organizationAdmin/folderIamAdmin/projectIamAdmin), permission vs role, diagnóstico de erro `set-iam-policy`, princípio "desça na hierarquia até o menor nó que cobre o necessário".
+- [5.1-iam-roles.md](5.1-iam-roles.md) — Roles administrativas por nível (organizationAdmin/folderIamAdmin/projectIamAdmin), permission vs role, diagnóstico de erro `set-iam-policy`, princípio "desça na hierarquia até o menor nó que cobre o necessário". **Bloco "Members, policies e herança" (curso *Essential Core Services*):** 5 tipos de principal, anatomia de policy (bindings), herança "parent wins", allow vs deny policies, IAM Conditions, Organization Policies, Recommender, GCDS + SSO. **Bloco "Organization Restrictions":** anti-exfiltração via egress proxy + header `X-Goog-Allowed-Resources`, comparação IAM × Org Policy × Org Restrictions × VPC SC. **Bloco "IAM Best Practices e IAP":** 4 práticas oficiais (hierarchy, herança, least privilege, auditoria), pattern grupos por role assignment, IAP para apps internos HTTPS + TCP forwarding.
 
 ---
 
@@ -34,6 +45,17 @@
 
 **Tópicos principais:**
 - **Quando usar Service Account:** para **aplicações** acessarem recursos (não para usuários humanos, não para análise interativa, não para devs)
+- **3 tipos de SA:**
+  - **User-created / Custom** (`<nome>@<project-id>.iam.gserviceaccount.com`) — recomendado
+  - **Compute Engine Default SA** (`<num>-compute@developer.gserviceaccount.com`) — vem com **Editor** automático, anexada por padrão a VMs novas
+  - **Google APIs SA** (`<num>@cloudservices.gserviceaccount.com`) — uso **interno** do Google, não anexe a VMs
+- **Access scopes** = mecanismo **legacy** para limitar token OAuth da VM. Para SA customizada, deixe `cloud-platform` e controle via IAM roles
+- **Service Account User role:** quem tem `roles/iam.serviceAccountUser` sobre uma SA pode **agir como ela** — efetivamente herda todas as permissions
+- **Pattern microsserviços:** cada componente em VMs com SA própria → least privilege escalável
+- **Tipos de keys:**
+  - **Google-managed** (default) — rotação automática, signing limited a 2 semanas, chave privada inacessível
+  - **User-managed** ("external") — Google só guarda public, você guarda private. Até 10 por SA. **Último recurso**
+  - Preferir: SA anexada > Workload Identity Federation > impersonation > short-lived credentials > JSON key
 - **Autenticação client-side (apps mobile/browser):**
   - **OAuth 2.0 user credentials** = padrão recomendado para apps que acessam dados privados em nome do usuário
   - **Service account keys** = perigoso em cliente (chave vaza)
@@ -41,7 +63,7 @@
 - **Workload Identity (GKE):** vincula Kubernetes Service Account a Google Service Account — forma segura, sem chaves expostas
 
 **Arquivos documentados:**
-- [5.2-service-accounts.md](5.2-service-accounts.md) — Criar SA, conceder roles, anexar à VM (cenário Cymbal Superstore: LAMP + Cloud SQL). Identity vs managed resource, ADC via metadata server, default SA pitfalls.
+- [5.2-service-accounts.md](5.2-service-accounts.md) — Criar SA, conceder roles, anexar à VM (cenário Cymbal Superstore: LAMP + Cloud SQL). Identity vs managed resource, ADC via metadata server, default SA pitfalls. **Bloco "Service Accounts" (curso *Essential Core Services*):** 3 tipos de SA (custom/Compute default/Google APIs), access scopes legacy, Service Account User pattern, microsserviços com SAs distintas, Google-managed vs user-managed keys (limite 10, signing 2 semanas). **Bloco "Best Practices de SA":** cuidado com `serviceAccountUser`, naming convention + display name, política de rotação + auditoria de keys via `serviceAccount.keys.list` (filtro `keyType=USER_MANAGED`).
 
 ---
 

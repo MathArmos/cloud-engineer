@@ -1,176 +1,116 @@
-# CLAUDE.md — cloud-engineer
+# cloud_engineer — workspace de estudo ACE
 
-Repositório de estudo para a certificação **Google Cloud Associate Cloud Engineer (ACE)**.
+Este repositório é um **caderno de estudo** da certificação **Google Cloud Associate Cloud Engineer**. Não é código — é documentação organizada por domínio de exame, alimentada conforme o usuário avança no curso oficial do **Google Cloud Skills Boost** e no **ACE Workbook**.
 
-**Objetivo:** entender GCP de verdade para conversar como engenheiro de cloud em uma feira de trabalho.  
-**Deadline:** 2026-05-25  
-**Prova oficial:** não está planejada — foco é competência técnica real.
+**Deadline:** 2026-05-25 (feira de trabalho). O objetivo do usuário é **entender em profundidade para conversar como engenheiro de cloud**, não tirar nota máxima na prova oficial.
 
 ---
 
-## Estrutura do repositório
+## Estrutura
 
 ```
-cloud-engineer/
-  README.md                        # visão geral, grade de cursos, progresso
-  CLAUDE.md                        # este arquivo
-  flashcards.md                    # erros de DQs para revisão pré-feira
-  _key-concepts-cross-cutting.md   # conceitos críticos transversais a todos os domínios
-
-  modulos/
-    01-setup-environment/          # IAM, hierarquia, projetos, billing
-    02-planning/                   # escolha de compute / storage / network
-    03-deploy/                     # implementar GCE, GKE, Cloud Run, dados, network, IaC
-    04-operations/                 # gerenciar recursos + monitoring/logging
-    05-access-security/            # IAM aprofundado, service accounts
-
-  .claude/skills/estudar-ace/SKILL.md   # skill de estudo
+cloud_engineer/
+├── CLAUDE.md                    ← este arquivo (norte do projeto)
+├── README.md                    ← visão geral do plano de estudo
+├── flashcards.md                ← DQs erradas + armadilhas (revisão pré-feira)
+├── .claude/
+│   └── skills/estudar-ace/      ← skill com fluxo detalhado
+└── modulos/
+    ├── 01-setup-environment/    ← Domínio 1 — IAM, projetos, billing
+    ├── 02-planning/             ← Domínio 2 — escolha de compute/storage/network
+    ├── 03-deploy/               ← Domínio 3 — implementar recursos
+    ├── 04-operations/           ← Domínio 4 — gestão + monitoring
+    └── 05-access-security/      ← Domínio 5 — IAM aprofundado + SAs
 ```
 
-### Dentro de cada módulo
-
-```
-modulos/XX-nome/
-  README.md                      # índice de subseções, DQs, arquivos criados
-  X.Y-topico.md                  # arquivo por subseção da prova
-  _detailed-notes-from-pdf.md    # notas brutas do workbook PDF (fonte temporária)
-  _diagnostic-answers.md         # gabarito oficial das DQs
-  lab-nome-do-lab.md             # labs práticos documentados
-  curso-nome-do-curso.md         # notas de curso Skills Boost (novo padrão)
-```
+Cada módulo tem um `README.md` que lista as **subseções** do domínio (ex.: 3.1, 3.2, ...) com o que cobre e quais DQs do workbook se aplicam. Os arquivos de tópico são criados **sob demanda** dentro de cada módulo (ex.: `03-deploy/3.1-compute-engine.md`).
 
 ---
 
-## Convenções de documentação
+## Formato dos arquivos de tópico
 
-### Arquivos de subseção (`X.Y-topico.md`)
-Formato padrão para cada arquivo:
+Todo arquivo `X.Y-nome.md` segue esta estrutura:
 
-```
-# X.Y — Nome da Subseção
-> DQs: XX, YY · Curso: Nome do Curso
+```markdown
+# X.Y — Nome do tópico
+> Fonte, DQs cobertas, considerações da prova
 
-## Conceito principal (tabela comparativa)
-## Quando usar cada opção
-## Comandos essenciais (bash blocks)
-## DQ XX — enunciado resumido
-Resposta: X — justificativa
-tabela com por que cada opção errada está errada
+## Conceitos
+   (notas explicativas em profundidade)
 
-## Pegadinhas de prova (tabela)
-```
+## Questionários
+   (DQs do workbook e quizzes do Skills Boost, resolvidos)
 
-### Arquivos de curso (`curso-nome.md`)
-Para cursos do Skills Boost estudados por completo — novo padrão a partir de "Core Services":
+## Labs
+   (labs feitos, comandos-chave, observações)
 
-```
-# Curso: Nome do Curso
-> Duração · Seções da prova cobertas
+## Cenário real
+   (onde isso aparece no trabalho de verdade)
 
-## Módulo N — Título
-conceitos + tabelas + comandos
-
-## DQs cobertas por este curso
-## Labs completados
-## Conexões com arquivos de subseção
+## Armadilhas de prova
+   (pegadinhas e detalhes que confundem)
 ```
 
-### Flashcards (`flashcards.md`)
-Só para **erros reais** em DQs. Formato:
-
-```
-## [Seção X.Y — Tópico] DQ NN
-**Pergunta:** ...
-**Meu erro:** ...
-**Correto:** ...
-**Por que as outras estão erradas:** ...
-**Mnemônico:** ...
-```
+Quando um arquivo de tópico cobre vários blocos do mesmo módulo (vídeos, sub-vídeos), use seções `## Bloco "Nome do bloco"` dentro de `## Conceitos` pra manter a origem visível.
 
 ---
 
-## Status dos módulos
+## Estilo de documentação
 
-| Módulo | Subseções | Arquivos detalhados | DQs |
-|--------|-----------|---------------------|-----|
-| **01 — Setup/IAM** | 1.1, 1.2 | ✅ Completo | 1–8 |
-| **02 — Planning** | 2.1, 2.2, 2.3 | ✅ Completo | 1–9 |
-| **03 — Deploy** | 3.1–3.6 | ✅ Completo | 1–10 |
-| **04 — Operations** | 4.1–4.6 | ✅ Completo | 1–9 |
-| **05 — Access & Security** | 5.1, 5.2 | ✅ Completo | 1–5 |
+**Idioma:** sempre **português brasileiro**.
 
----
+**Profundidade > concisão.** O usuário quer entender, não decorar. Para cada conceito documentado, cubra:
+- **O quê** (definição precisa)
+- **Por quê** (qual problema resolve)
+- **Quando usar** (cenário típico)
+- **Armadilha de prova** (se houver)
+- **Exemplo prático** — comando `gcloud` ou cenário concreto
 
-## Grade de cursos Skills Boost
+**Use analogias** quando o conceito for abstrato (já temos várias: "Local SSD é como RAM", "burst capability é como bônus de dados pré-pago", "suspend é hibernar laptop").
 
-| # | Curso | Status |
-|---|-------|--------|
-| 1 | A Tour of Google Cloud Hands-on Labs | ✅ |
-| 2 | Preparing for Your ACE Journey | ✅ |
-| 3 | Essential GCP Infrastructure: Foundation | ✅ |
-| 4 | Essential GCP Infrastructure: Core Services | 🟡 em andamento |
-| 5 | Select a GCP Database for Your Applications | ⬜ |
-| 6 | Elastic GCP Infrastructure: Scaling and Automation | ⬜ |
-| 7 | Getting Started with Google Kubernetes Engine | ⬜ |
-| 8 | Developing Applications with Cloud Run: Fundamentals | ⬜ |
-| 9 | Logging and Monitoring in Google Cloud | ⬜ |
-| 10 | Observability in Google Cloud | ⬜ |
-| 11 | Implementing Cloud Load Balancing for Compute Engine | ✅ |
-| 12 | Set Up an App Dev Environment on Google Cloud | ✅ |
-| 13 | Develop Your Google Cloud Network | ⬜ |
-| 14 | Build Infrastructure with Terraform on Google Cloud | ⬜ (opcional) |
+**Sempre inclua o equivalente `gcloud`** quando o passo foi feito via Console. A prova ACE favorece quem conhece os flags.
+
+**Tabelas e diagramas ASCII** são bem-vindos pra visualizar ciclos de vida, hierarquias, comparativos.
 
 ---
 
-## Seções da prova ACE
+## Fluxos de trabalho
 
-| # | Domínio | DQs |
-|---|---------|-----|
-| 1 | Setting up a cloud solution environment | 1–8 |
-| 2 | Planning and configuring a cloud solution | 1–9 |
-| 3 | Deploying and implementing a cloud solution | 1–10 |
-| 4 | Ensuring successful operation of a cloud solution | 1–9 |
-| 5 | Configuring access and security | 1–5 |
+A skill **`estudar-ace`** (em `.claude/skills/`) tem o fluxo detalhado dos 3 caminhos principais:
 
-Total: **39 Diagnostic Questions**
+1. **Usuário cola conteúdo de aula** (texto/transcrição/screenshot) → identificar subseção → documentar na seção `## Conceitos` do arquivo do tópico.
+2. **Usuário cola DQ ou quiz** → **NÃO revelar resposta antes** que ele tente → após resposta, explicar por que cada alternativa está certa/errada → se errou, adicionar a `flashcards.md`.
+3. **Usuário cola instruções de lab** → explicar objetivo do Google → para cada passo, dizer o que faz + por que essa flag → documentar comandos-chave em `## Labs`.
+
+A skill dispara em frases como "documenta isso", "ajuda com esse quiz", "ajuda com esse lab", "explica isso". Quando ela não disparar, **aplique as mesmas convenções manualmente**.
 
 ---
 
-## Como estudar com este repositório
+## Regras importantes
 
-### Fluxo padrão
-1. Cole conteúdo de aula → use a skill `/estudar-ace` ou cole direto
-2. Cole questão do workbook → Claude guia antes de revelar resposta; erros → `flashcards.md`
-3. Cole instruções de lab → explica cada passo + porquê; comandos viram parte da doc
-4. Cada conceito: **o quê + por quê + quando usar + armadilha de prova**
-
-### Para cursos Skills Boost
-- Criar `curso-nome-do-curso.md` na pasta do módulo mais relevante
-- Ao finalizar o curso, extrair conceitos novos para os arquivos de subseção correspondentes
-- Marcar o curso como ✅ no `README.md` e neste `CLAUDE.md`
-
-### Para Diagnostic Questions
-- DQs do workbook estão mapeadas por seção nos READMEs de cada módulo
-- Gabaritos oficiais em `_diagnostic-answers.md` de cada módulo
-- Erros vão para `flashcards.md` na raiz
+1. **Nunca revele a resposta de uma DQ antes do usuário tentar.** Pergunte qual ele escolheu e por quê.
+2. **Sempre identifique a subseção** ao documentar: "isso é da 3.1 (Compute Engine)" — facilita encontrar depois.
+3. **Atualize o README do módulo** quando criar um arquivo novo ou expandir um existente significativamente (lista "Arquivos documentados").
+4. **DQs erradas (e armadilhas acertadas por sorte) viram entrada em `flashcards.md`** no formato definido lá.
+5. **Datas relativas viram absolutas** ao documentar ("amanhã" → "2026-05-15").
+6. **Cortes de emergência** se atrasar: primeiro 3.6 (Terraform — não está no exam guide oficial), depois 4.6 (Observability parte 2).
 
 ---
 
-## Arquivos mais importantes para revisão rápida
+## Pré-feira (a partir de 2026-05-24)
 
-| Arquivo | Para que serve |
-|---------|----------------|
-| [`flashcards.md`](flashcards.md) | Revisão de todos os erros de DQ |
-| [`_key-concepts-cross-cutting.md`](_key-concepts-cross-cutting.md) | Conceitos críticos transversais |
-| [`modulos/03-deploy/3.1-compute-engine.md`](modulos/03-deploy/3.1-compute-engine.md) | Compute Engine completo (1.700 linhas) |
-| [`modulos/05-access-security/5.2-service-accounts.md`](modulos/05-access-security/5.2-service-accounts.md) | Service Accounts + OAuth + Workload Identity |
+Quando se aproximar do deadline, lembre o usuário de:
+- Revisar **todo o `flashcards.md`**
+- Reler **os READMEs dos 5 módulos** (visão panorâmica)
+- Compilar **1 página de cheatsheet** (hierarquia IAM, árvore de bancos, tipos de LB, `gcloud` críticos)
+- Praticar **explicar 3 cenários reais em voz alta** (como faria na feira)
 
 ---
 
-## Linguagem e estilo
+## O que NÃO fazer
 
-- Documentação em **PT-BR**
-- Termos técnicos GCP permanecem em inglês (Cloud Run, Persistent Disk, etc.)
-- Tabelas comparativas preferidas a texto corrido
-- Comandos `gcloud`/`kubectl` sempre em blocos de código com flags explícitas
-- Sem comentários óbvios no código — só quando o "por quê" não é evidente
+- ❌ Não usar emojis exceto quando o usuário pedir explicitamente (✅/❌ em tabelas comparativas são exceção aceita).
+- ❌ Não criar arquivos fora da estrutura `modulos/0N-.../` sem motivo claro.
+- ❌ Não responder em inglês, mesmo que o conteúdo colado esteja em inglês.
+- ❌ Não pular o "porquê" ao documentar — explicação rasa não ajuda na feira.
+- ❌ Não inflar feedback em DQs — se errou bonito, explique direto onde foi a confusão.
