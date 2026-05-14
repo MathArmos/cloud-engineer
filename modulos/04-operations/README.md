@@ -16,7 +16,8 @@
   - Deletar snapshot com schedule: precisa **detach do schedule antes**
 - Políticas de snapshot agendado
 
-**Arquivos documentados:** _(nenhum ainda)_
+**Arquivos documentados:**
+- [4.1-compute-engine.md](4.1-compute-engine.md) — Snapshots (incremental, só PDs, live, frequência mínima 10min), deletar schedule (detach primeiro), comandos list/describe/delete, imagens vs snapshots.
 
 ---
 
@@ -36,7 +37,8 @@
   - `kubectl apply -f file.yaml` → **declarativo** (idempotente, recomendado)
   - `kubectl create`, `kubectl run`, `kubectl replace` → imperativos
 
-**Arquivos documentados:** _(nenhum ainda)_
+**Arquivos documentados:**
+- [4.2-gke.md](4.2-gke.md) — Objetos K8s (Pod/Deployment/Service), LBs no GKE (L4 Service, L7 Ingress gce/gce-internal + NEG), kubectl imperativo vs declarativo, manifests.
 
 ---
 
@@ -51,7 +53,8 @@
   - **CPU utilization** — gatilho de scale up
 - Caso típico de prova: "limitar conexões ao DB" → ajustar **Max instances**
 
-**Arquivos documentados:** _(nenhum ainda)_
+**Arquivos documentados:**
+- [4.3-cloud-run.md](4.3-cloud-run.md) — Autoscaling settings (CPU 60%, concurrency 80, max/min instances), como limitar conexões ao DB (max instances), traffic splitting.
 
 ---
 
@@ -64,7 +67,8 @@
   - Ações: `SetStorageClass`, `Delete`
   - Mover de Standard → Nearline depois de **data específica** = usar `CreatedBefore` + `MatchesStorageClass`
 
-**Arquivos documentados:** _(nenhum ainda)_
+**Arquivos documentados:**
+- [4.4-storage.md](4.4-storage.md) — Lifecycle rules (conditions: age/createdBefore/matchesStorageClass, actions: SetStorageClass/Delete), precedência de regras, exemplos práticos.
 
 ---
 
@@ -76,7 +80,8 @@
 - **Cálculo de CIDR:** /24 = 256 IPs, /23 = 512, /22 = 1024, /21 = 2048, /20 = 4096
 - Regra: prefix MENOR = MAIS IPs (você só pode **expandir**, não reduzir)
 
-**Arquivos documentados:** _(nenhum ainda)_
+**Arquivos documentados:**
+- [4.5-networking.md](4.5-networking.md) — Expandir subnet (só expande, zero downtime, prefix menor = mais IPs), cálculo CIDR (2^(32-prefix) − 4), IPs ephemeral vs static, Cloud NAT.
 
 ---
 
@@ -90,7 +95,8 @@
   - Métrica certa: **CPU utilization** (não "CPU load")
 - **Cloud Logging:** sinks, retention, exclusion filters
 
-**Arquivos documentados:** _(nenhum ainda)_
+**Arquivos documentados:**
+- [4.6-monitoring.md](4.6-monitoring.md) — Ferramentas (Monitoring/Logging/Trace/Profiler/Ops Agent/Prometheus), Alert Policies (metric utilization, trigger any vs all, threshold decimal), sinks de logging, tipos de audit logs.
 
 ---
 

@@ -63,8 +63,8 @@ Total: **39 Diagnostic Questions** ao longo dos 5 domínios.
 | # | Curso | Duração | Status |
 |---|-------|---------|--------|
 | 1 | A Tour of Google Cloud Hands-on Labs | 45min | ✅ |
-| 2 | Preparing for Your ACE Journey | — | 🟡 9% |
-| 3 | Essential GCP Infrastructure: Foundation | 6h45 | ⬜ |
+| 2 | Preparing for Your ACE Journey | — | ✅ |
+| 3 | Essential GCP Infrastructure: Foundation | 6h45 | ✅ |
 | 4 | Essential GCP Infrastructure: Core Services | 8h15 | ⬜ |
 | 5 | Select a GCP Database for Your Applications | 6h | ⬜ |
 | 6 | Elastic GCP Infrastructure: Scaling and Automation | 7h | ⬜ |

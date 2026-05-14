@@ -33,7 +33,8 @@
 - Node pools (separação de workloads)
 - Image types (Container-Optimized OS vs Ubuntu)
 
-**Arquivos documentados:** _(nenhum ainda)_
+**Arquivos documentados:**
+- [3.2-gke.md](3.2-gke.md) — Autopilot vs Standard, Zonal vs Regional, VPC-native, kubectl básico. DQ 03 resolvida.
 
 ---
 
@@ -50,7 +51,8 @@
   - `google.storage.object.finalize` (objeto criado/finalizado)
   - outros eventos: delete, archive, metadataUpdate
 
-**Arquivos documentados:** _(nenhum ainda)_
+**Arquivos documentados:**
+- [3.3-cloud-run.md](3.3-cloud-run.md) — Cloud Run vs App Engine (Standard/Flexible) vs Cloud Run Functions, trigger `google.storage.object.finalize`, comparação de concorrência. DQs 04 e 05 resolvidas.
 
 ---
 
@@ -62,7 +64,8 @@
 - **Cloud SQL HA:** `gcloud sql instances create --availability-type=REGIONAL` para failover automático
 - **Carregar dados no BigQuery:** Data Transfer Service vs `bq load` script vs streaming API vs Dataflow — escolher pelo custo/simplicidade
 
-**Arquivos documentados:** _(nenhum ainda)_
+**Arquivos documentados:**
+- [3.4-data-solutions.md](3.4-data-solutions.md) — Storage classes, location types, Cloud SQL HA (`--availability-type`), BigQuery ingestão (Data Transfer Service vs Streaming vs Dataflow). DQs 06, 07 e 08 resolvidas.
 
 ---
 
@@ -95,7 +98,8 @@
 - Conceitos: providers, state, modules
 - **Não está no exam guide oficial — opcional**
 
-**Arquivos documentados:** _(nenhum ainda)_
+**Arquivos documentados:**
+- [3.6-terraform.md](3.6-terraform.md) — Por que IaC, ferramentas (Terraform, Config Connector, Helm, Cloud Foundation Toolkit), lifecycle init→plan→apply→destroy. DQ 10 resolvida.
 
 ---
 
