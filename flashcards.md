@@ -319,3 +319,24 @@
   gsutil rewrite -k gs://<bucket>/<objeto>
   ```
   Lê o objeto com `decryption_key1` (chave antiga), escreve in-place com `encryption_key` (chave nova), sem download nem mudança de URL/generation.
+
+---
+
+### [3.5 — Hybrid connectivity] Quiz Elastic GCI (2026-05-15) Q2: não atende requisitos de peering, como conectar a Workspace e YouTube?
+- **Errei porque:** marquei **Partner Interconnect** — vi "cannot meet requirements" e pulei para "vai via parceiro"
+- **Correto:** **Carrier Peering**
+- **Por quê:** Workspace e YouTube são **serviços públicos do Google** → território de **Peering services**, não Interconnect. Interconnect (Dedicated/Partner) só acessa RFC 1918 da sua VPC. Se não atende requisitos de **Direct Peering** (presença em PoP, volume de tráfego), o fallback é **Carrier Peering** (mesmo conjunto de serviços públicos via carrier parceiro).
+- **Por que Partner Interconnect está errado:** Partner Interconnect resolve falta de **colocation facility**, não falta de **peering requirements**. Categoria completamente diferente.
+- **Mnemônico:** Workspace/YouTube/APIs públicas = **Peering** (Direct ou Carrier). RFC 1918/VPC privada = **Interconnect** (Dedicated ou Partner).
+
+---
+
+### [3.5 — Hybrid connectivity] Quiz Elastic GCI (2026-05-15) Q3: serviço de Interconnect que exige colocation facility + 10 Gbps por link
+- **Errei porque:** marquei **Direct Peering** — confundi porque Direct Peering também é 10 Gbps por link
+- **Correto:** **Dedicated Interconnect**
+- **Por quê:** as duas pegadinhas que desempatam:
+  1. **"Colocation facility"** = Dedicated Interconnect. Direct Peering usa **Edge PoP (Point of Presence)**, não colocation.
+  2. **"Cloud Interconnect service"** literal — Direct Peering não é Interconnect, é Peering.
+- **Mnemônico:**
+  - Colocation facility + 10/100 Gbps + SLA + RFC 1918 → **Dedicated Interconnect**
+  - Edge PoP + 10 Gbps + sem SLA + IPs públicos → **Direct Peering**
