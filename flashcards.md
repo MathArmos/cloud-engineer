@@ -258,3 +258,64 @@
   gcloud iam roles update ROLE_ID --project=PROJECT_ID --file=role.yaml
   ```
 - **Mnemônico:** "Custom role = **update**, nunca delete. Delete quebra bindings; update preserva tudo."
+
+---
+
+### [1.2 — Billing] Quiz Core Services Q3 (2026-05-14): o que acontece quando budget de $500 atinge 100%
+- **Errei porque:** marquei "Todas as atividades do projeto serão suspensas". Intuição de que "se eu defini um teto, o teto é enforced". Outras clouds reforçam essa intuição errada (AWS Budgets actions, Azure Cost Management).
+- **Correto:** **um email é enviado ao Billing Admin.** Budget alert é **apenas notificação**, **NUNCA** suspende serviço. A fatura continua subindo se ninguém agir.
+- **Por que as outras estão erradas:**
+  - "Nada acontece" → falso, o email É enviado
+  - "Suspende todas as atividades" → ❌ ARMADILHA — alert nunca corta serviço
+  - "Período de cortesia de 4 horas" → **inventado**, não existe
+- **Como de fato cortar gasto (pra prova):** cadeia **Budget alert → Pub/Sub topic → Cloud Run function → desabilitar billing/deletar recurso**. Você (engenheiro) escreve a lógica; o GCP não faz por padrão.
+- **Mnemônico:** "**No GCP, budget é régua, não disjuntor.** Alert = email. Cortar = você programa via Pub/Sub + Function."
+
+---
+
+### [4.6 — Cloud Trace] Quiz Observability Q1 (2026-05-14): propósito do Cloud Trace
+- **Errei porque:** escolhi "reporting on resource consumption" — confundi com Cloud Monitoring (que mede CPU, memória, I/O)
+- **Correto:** Cloud Trace = **reporting on latency** (quanto tempo cada parte de uma request leva, entre serviços)
+- **Por que as outras estão erradas:**
+  - Resource consumption → **Cloud Monitoring** (métricas de infraestrutura)
+  - System errors → **Cloud Logging** + **Error Reporting**
+  - Application errors → **Error Reporting** (agrega stack traces)
+- **Mnemônico:** "**Trace = tempo** (latência). Nunca erros, nunca CPU. Trace rastreia o *caminho* e o *tempo* da request."
+
+---
+
+### [4.6 — SRE] Quiz Observability Q2 (2026-05-14): fundamento do SRE do Google
+- **Errei porque:** escolhi "testing and release procedures" — associei SRE a DevOps/CI-CD automaticamente
+- **Correto:** o fundamento do SRE é **monitoring** — sem visibilidade do sistema você não tem SLO, não tem error budget, não tem nada
+- **Por que as outras estão erradas:**
+  - Testing/release → práticas de engenharia/DevOps, não o fundamento de *operar* o sistema
+  - Capacity planning → consequência do monitoring, não o fundamento
+  - Root cause analysis → você só faz RCA *depois* que o monitoring alertou
+- **Sequência mental SRE:** Monitoring (vejo) → Alerting (aviso) → Incident response (ajo) → RCA (aprendo) → Capacity planning (prevejo)
+- **Mnemônico:** "SRE começa com **olhos abertos** (monitoring). Tudo mais vem depois."
+
+---
+
+## ⚠️ Labs pendentes para revisitar
+
+### [Lab pendente — 2.2 Cloud Storage CSEK] Qwiklabs "Cloud Storage features", Tasks 3 e 4 (2026-05-14)
+- **Status:** parcialmente completo — Tasks 1, 2, 5, 6, 7 OK; **Tasks 3 e 4 bloqueadas pelo ambiente Qwiklabs**.
+- **O que foi bloqueado:** upload com Customer-Supplied Encryption Key (CSEK) e rotação via `gsutil rewrite -k`.
+- **Por que bloqueou:** Organization Policy do projeto de aula enforcing Google-managed encryption only. Erro retornado:
+  ```
+  PreconditionException: 412 Requested encryption type for object is not
+  compliant with the bucket's encryption enforcement configuration.
+  ```
+- **Diagnóstico confirmado:** `gcloud storage buckets describe` retornou `encryption: null` (bucket limpo) — bloqueio veio de policy mais alta, fora do alcance do aluno.
+- **Lição que importa pra feira:** CSEK está sendo aposentado em ambientes managed. Perder a chave = perder o dado pra sempre. **Indústria prefere CMEK (Cloud KMS)** pelo mesmo controle com rotação gerenciada e recovery possível. Quando o enunciado da DQ disser "we manage our own keys outside GCP" → CSEK; "we want to control rotation and revocation" → CMEK.
+- **Bugs operacionais que cometi (não esquecer):**
+  1. Digitei `x` por engano no nano e salvei → `.boto` corrompeu → `gsutil` inteiro quebrou. Recovery: `rm .boto && gsutil config -n`.
+  2. Ctrl+W do nano fecha aba do navegador. **Solução:** usar `sed -i` direto no shell, ou abrir Cloud Shell em janela própria.
+  3. `$variavel` ≠ `nome-literal`. `gs://$qwiklabs-...` expande `$qwiklabs` (vazio) → vira `gs:///-...` → erro `Invalid bucket name`.
+  4. Cloud Shell perde variáveis entre sessões → sempre re-exportar e confirmar com `echo $VAR`.
+- **Como completar antes da feira:** re-executar o lab fora do Qwiklabs (conta pessoal com créditos GCP). Documentação completa do que **seria** feito está em `modulos/02-planning/2.2-cloud-storage.md` na seção `## Labs > Task 3 e Task 4`.
+- **Comando-mestre da rotação (decorar mesmo sem ter feito na prática):**
+  ```bash
+  gsutil rewrite -k gs://<bucket>/<objeto>
+  ```
+  Lê o objeto com `decryption_key1` (chave antiga), escreve in-place com `encryption_key` (chave nova), sem download nem mudança de URL/generation.

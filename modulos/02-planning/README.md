@@ -38,6 +38,15 @@
 
 **Arquivos documentados:**
 - [2.2-data-storage.md](2.2-data-storage.md) — fundação completa (PDF M2 L7): 4 famílias (relational/NoSQL/object/warehouse), OLTP vs OLAP, storage classes, DQs 05-07 resolvidas
+- [2.2-storage-database-overview.md](2.2-storage-database-overview.md) — overview do curso Essential GCP Infra: Core Services M3: decision tree formal, Filestore, AlloyDB, Memorystore, HTAP
+- [2.2-cloud-storage.md](2.2-cloud-storage.md) — deep dive Cloud Storage (Core Services M3): buckets/objetos, 4 storage classes, location types, durability vs availability, IAM/ACL/Signed URLs, encryption (CMEK/CSEK), Versioning vs Soft Delete, Lifecycle, Retention Lock, Autoclass, Pub/Sub notifications, transfer services, strong consistency
+- [2.2-filestore.md](2.2-filestore.md) — deep dive Filestore (Core Services M3): NFSv3 gerenciado, comparativo Cloud Storage vs PD vs Filestore, 6 use cases, tiers, mount em GCE e GKE (RWX)
+- [2.2-cloud-sql.md](2.2-cloud-sql.md) — deep dive Cloud SQL (Core Services M3): managed vs self-managed, 3 engines (MySQL/Postgres/SQL Server), limites (64TB/60k IOPS/624GB/96 vCPU), HA regional síncrona, backups + PITR, scale up vs read replicas, 4 connection types (Private IP / Auth Proxy / SSL manual / IP autorizado)
+- [2.2-spanner.md](2.2-spanner.md) — deep dive Spanner (Core Services M3): relacional + horizontal scale + global strong consistency, TrueTime / atomic clocks, regional vs multi-regional SLA, 5 gatilhos canônicos, comparativo Spanner vs Cloud SQL, pricing por node, dialeto Postgres, quando NÃO usar
+- [2.2-alloydb.md](2.2-alloydb.md) — deep dive AlloyDB (Core Services M3): Postgres-compatible com HTAP, storage/compute desacoplados, engine colunar, 4x OLTP / 100x OLAP vs Postgres padrão, 99,99% SLA inclusive of maintenance, Vertex AI inline em SQL, comparativo Cloud SQL vs AlloyDB vs Spanner
+- [2.2-firestore.md](2.2-firestore.md) — deep dive Firestore (Core Services M3): NoSQL document, serverless + scale to zero, ACID multi-document, mobile/web SDKs (live sync + offline), Native mode vs Datastore mode (3 limitações antigas removidas), multi-region vs regional, decision tree Firestore vs Bigtable
+- [2.2-bigtable.md](2.2-bigtable.md) — deep dive Bigtable (Core Services M3): NoSQL wide-column PB-scale, <10ms, mesmo banco de Search/Maps/Gmail, storage model (row key + column family + sparse + multi-version), processing separado de Colossus, tablets + SSTable, rebalance sem mover dado, throughput linear, 5 gatilhos canônicos, HBase API, 3 nodes = 30k ops/s mínimos (não escala a zero)
+- [2.2-memorystore.md](2.2-memorystore.md) — deep dive Memorystore (Core Services M3): cache in-memory gerenciado (Redis/Memcached), sub-ms, HA 99,9% entre 2 zonas, até 300 GB / 12 Gbps, Basic vs Standard tier, lift-and-shift Redis OSS (zero code), Private IP only, 6 padrões de uso (cache aside, session, leaderboard, rate limit, fila, pub/sub leve), NÃO é source of truth
 
 ---
 

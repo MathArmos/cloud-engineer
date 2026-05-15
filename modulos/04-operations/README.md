@@ -96,7 +96,8 @@
 - **Cloud Logging:** sinks, retention, exclusion filters
 
 **Arquivos documentados:**
-- [4.6-monitoring.md](4.6-monitoring.md) — Ferramentas (Monitoring/Logging/Trace/Profiler/Ops Agent/Prometheus), Alert Policies (metric utilization, trigger any vs all, threshold decimal), sinks de logging, tipos de audit logs.
+- [4.6-monitoring.md](4.6-monitoring.md) — Visão geral do Cloud Observability, Metrics scope (1-375 projetos, acesso unificado, scopes separados para isolamento), Cloud Monitoring (dashboards, alertas, uptime checks, Ops Agent, métricas customizadas), Cloud Logging (sinks: Storage/BigQuery/Pub/Sub, retenção 30 dias, fluxo Splunk via Pub/Sub+Dataflow), Error Reporting (agregação, plataformas incl. EC2, linguagens), Cloud Trace (distributed tracing, latência entre serviços), Cloud Profiler (CPU/mem em produção, baixo overhead).
+- [curso-core-services.md § Módulo 4](curso-core-services.md#módulo-4--resource-monitoring) — Registro completo do módulo Resource Monitoring: 4.1 visão geral Observability, 4.2 Cloud Monitoring (metrics scope, alertas SRE, uptime checks, Ops Agent, custom metrics + autoscaling), 4.3 Cloud Logging, 4.4 Error Reporting, 4.5 Cloud Trace, 4.6 Cloud Profiler, 4.7 BindPlane + integração Splunk.
 
 ---
 
