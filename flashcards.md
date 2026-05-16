@@ -340,3 +340,16 @@
 - **Mnemônico:**
   - Colocation facility + 10/100 Gbps + SLA + RFC 1918 → **Dedicated Interconnect**
   - Edge PoP + 10 Gbps + sem SLA + IPs públicos → **Direct Peering**
+
+
+---
+
+### [3.5 — LB] Quiz autoscaling MIG: quais policies são aplicáveis (multi-select)
+- **Errei porque:** marquei só "CPU utilization" achando que a pergunta queria a policy "principal" ou mais comum. Não percebi que era multi-select e que TODAS as 4 opções são policies válidas.
+- **Correto:** **CPU utilization + Monitoring metrics + Queue-based workload + Load balancing capacity** — as 4 categorias de autoscaling policy do MIG.
+- **Por que as outras estão certas (todas):**
+  - **CPU utilization** → policy nativa, target médio de CPU do grupo.
+  - **Monitoring metrics** → qualquer métrica do Cloud Monitoring (memory, p95 latency, métricas custom da app).
+  - **Queue-based workload** → fila Pub/Sub como gatilho (worker escala com mensagens pendentes); inclui também **schedule** (horário/duração/recorrência).
+  - **Load balancing capacity** → utilização do backend service do LB (RPS ou CPU) como gatilho.
+- **Mnemônico:** "**C-M-Q-L**" — **C**PU, **M**onitoring, **Q**ueue, **L**B capacity. Se a pergunta diz "**which of the following are** ... applicable" (sem "best" / "primary"), **assuma multi-resposta** e marque tudo que for verdade.
