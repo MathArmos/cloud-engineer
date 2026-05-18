@@ -21,6 +21,18 @@
 
 ---
 
+### [1.1 — Hierarquia] Q4 do quiz "Introduction to Google Cloud" / Curso Getting Started with GKE (2026-05-17): melhor estrutura IAM para um app
+- **Quase errei:** marquei inicialmente "criar novos projetos para cada aplicativo componente e, em seguida, criar **pastas dentro desses projetos** para os recursos" — caí na armadilha de inverter a hierarquia
+- **Correto:** **"Criar uma nova pasta dentro do nó da organização e, em seguida, criar projetos dentro dessa pasta para os recursos"** → respeita Org → Folder → Project → Resource
+- **Por que as outras estão erradas:**
+  - "Pastas dentro de projetos" → **impossível** na hierarquia GCP. Folder fica acima do Project, nunca dentro
+  - "Criar novo nó organizacional" → normalmente só existe **um Organization node** por empresa (vinculado ao Cloud Identity / Workspace domain); criar outro é exceção rara
+  - "Projetos dentro de pastas departamentais" → válido estruturalmente, mas mistura "componentes do app" com "departamentos" — não é o desenho mais limpo para isolar um app
+- **Mnemônico/padrão de prova:** "**Hierarquia GCP só desce.** Folder mora em Org, Project mora em Folder, Resource mora em Project. Inverter qualquer um = distrator."
+- **Por que é insidioso:** a opção errada **parece razoável** porque imita a estrutura de pastas de filesystem (onde você cria pastas dentro de pastas dentro do projeto). No GCP, Project é o **contêiner de recursos**, não de Folders.
+
+---
+
 ### [1.2 — Billing] Q2 do quiz / DQ 07 workbook: relação billing accounts ↔ projetos (pick two)
 - **Errei porque:** pulei — não sabia a cardinalidade
 - **Correto:** "**1 projeto → 1 billing account ativa**" + "**1 billing account → N projetos**" (relação N:1)
