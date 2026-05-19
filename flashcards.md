@@ -21,6 +21,29 @@
 
 ---
 
+### [3.2 — Kubernetes] Q1 do quiz "Introduction to Containers and Kubernetes" / Curso Getting Started with GKE — Module 2 (2026-05-18): approach de gerenciamento do K8s
+- **Errei porque:** marquei "Virtualization" — confundi "tecnologia que faz K8s rodar" com "approach de gerenciamento que K8s usa"
+- **Correto:** **Declarative configuration**
+- **Por que as outras estão erradas:**
+  - **Virtualization** → é a tecnologia que cria VMs em cima de hardware físico. Não tem a ver com "descrever desired state e ser mantido"
+  - **Imperative configuration** → o OPOSTO de declarative: você diz **COMO** fazer passo a passo, não O QUE quer. K8s **não usa** esse modelo (admins usam imperativo só pra fixes rápidos e exploração)
+  - **Containerization** → é como você empacota o app (Docker, OCI), não como o orquestrador gerencia
+- **Mnemônico:** "**Declarativo = receita do bolo final, não os passos do confeiteiro.**" Você descreve o estado desejado; K8s descobre os passos via watch loop. Analogia SQL: `SELECT * FROM users` é declarativo; um loop manual lendo linha a linha seria imperativo
+
+---
+
+### [3.2 — Kubernetes] Q2 do quiz "Introduction to Containers and Kubernetes" / Curso Getting Started with GKE — Module 2 (2026-05-18): nome dos "computadores" que rodam workloads num cluster GKE
+- **Errei porque:** marquei "Containers" — confundi "o que roda nos computadores" com "os computadores em si"
+- **Correto:** **Nodes**
+- **Por que as outras estão erradas:**
+  - **Containers** → é o que **roda dentro** dos pods, que rodam **dentro** dos nodes. Não são "computadores"
+  - **Container images** → templates/arquivos a partir dos quais containers são criados (não rodam nada por si)
+  - **Control planes** → gerenciam o cluster (apiserver/etcd/scheduler/controller-mgr), não rodam workloads do usuário
+- **Mnemônico:** "**Pod mora em Node; Container mora em Pod; Image vira Container.**" O computador (VM) que hospeda os pods é sempre **Node** — esse termo é universal em K8s/GKE
+- **Cuidado extra:** No GKE, **node K8s = VM do Compute Engine** que roda containers. Em K8s self-hosted, node pode ser bare metal. "Node" do GCP genérico (fora de K8s) também aparece como sinônimo de VM — contexto manda
+
+---
+
 ### [1.1 — Hierarquia] Q4 do quiz "Introduction to Google Cloud" / Curso Getting Started with GKE (2026-05-17): melhor estrutura IAM para um app
 - **Quase errei:** marquei inicialmente "criar novos projetos para cada aplicativo componente e, em seguida, criar **pastas dentro desses projetos** para os recursos" — caí na armadilha de inverter a hierarquia
 - **Correto:** **"Criar uma nova pasta dentro do nó da organização e, em seguida, criar projetos dentro dessa pasta para os recursos"** → respeita Org → Folder → Project → Resource
