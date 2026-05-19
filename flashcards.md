@@ -388,3 +388,48 @@
   - **Queue-based workload** → fila Pub/Sub como gatilho (worker escala com mensagens pendentes); inclui também **schedule** (horário/duração/recorrência).
   - **Load balancing capacity** → utilização do backend service do LB (RPS ou CPU) como gatilho.
 - **Mnemônico:** "**C-M-Q-L**" — **C**PU, **M**onitoring, **Q**ueue, **L**B capacity. Se a pergunta diz "**which of the following are** ... applicable" (sem "best" / "primary"), **assuma multi-resposta** e marque tudo que for verdade.
+
+
+---
+
+### [3.2 — GKE Module 3 / Object Management] Quiz Module 3 Q1 (2026-05-18): como deployar várias cópias de um app pra balanceamento de carga
+- **Errei porque:** marquei "Crie manifestos de Pod nomeados separadamente para cada instância". Caí na armadilha "Pod = pet" — pensei em criar N manifests, sem perceber que Pod solto é descartável e não se auto-cura.
+- **Correto:** **Crie um manifesto de Deployment que especifique o número de réplicas**.
+- **Por quê:** Pod (Sub-bloco 12.3) é ephemeral, não se auto-cura, não foi feito pra rodar pra sempre. Quem garante "sempre N réplicas vivas" é o **Deployment** → ReplicaSet → Pods. Se um pod cai, o ReplicaSet recria. Atualizar imagem = mudar 1 campo do Deployment (rolling update automático).
+- **Por que as outras erradas:**
+  - **"Manifesto de Service LoadBalancer com replicas"** → Service **não tem campo replicas**. Service só roteia tráfego pra pods existentes (via label selector); não cria pods.
+  - **"Implante o manifesto de Pod várias vezes"** → Nome é único por namespace; `kubectl apply` é idempotente, não duplica. E mesmo se renomeasse, ainda seriam Pods soltos (mesma armadilha).
+  - **"Manifestos de Pod separados"** → mesma armadilha do que marquei.
+- **Mnemônico:** "**Pod = cattle, não pet.**" Sempre que a questão pedir "N réplicas + alta disponibilidade", a resposta é **Deployment**, nunca Pod direto.
+
+---
+
+### [3.2 — GKE Module 3 / Autopilot vs Standard] Quiz Module 3 Q2 (2026-05-18): caso de uso para o modo Standard
+- **Errei porque:** marquei "Você precisa de tipos de máquinas baseados em cargas de trabalho". Raciocinei "Standard = mais customizável, então você escolhe machine type" — mas a frase descreve **automação baseada em workload**, que é literalmente o Pilar 1 do Autopilot.
+- **Correto:** **Você precisa de acesso SSH aos nós.**
+- **Por quê:** Autopilot **bloqueia SSH** (Sub-bloco 11.3 — locked-down nodes, sem privilege escalation). Se a empresa exige acesso direto ao node (debug profundo, agente legado), **só Standard atende**.
+- **Por que as outras erradas (todas são Autopilot):**
+  - **"Evitar configuração de cluster"** → Pilar do Autopilot: hands-off.
+  - **"Máquinas baseadas em workload"** → Pilar 1 do Autopilot: ele auto-define machine type pelos pods declarados.
+  - **"Pagar só pelos Pods"** → Pilar 4 do Autopilot: pay-per-pod.
+- **Mnemônico de desempate Autopilot ↔ Standard:**
+  - Tem palavras "automático / baseado em workload / hands-off / evitar configurar / pagar só pelos pods" → **Autopilot**
+  - Tem palavras "SSH / privileged / hostPath / Ubuntu / GPU custom / acesso direto ao node" → **Standard**
+  - Quem **escolhe machine type baseado em workload** = **Autopilot** (não Standard — em Standard quem escolhe é você, sem olhar workload automaticamente).
+
+---
+
+### [3.2 — GKE Module 4 / Introspection] Quiz Module 4 Q2 (2026-05-19): qual comando identifica quais containers estão OK e quais estão falhando num Pod
+- **Errei porque:** marquei `kubectl exec`. Associei "investigar problema no container" → "entrar no container" → `exec`. Mas a pergunta é sobre **identificar onde está o problema** (passo de diagnóstico), não sobre investigar dentro de um container já identificado.
+- **Correto:** **`kubectl describe pod`**.
+- **Por quê:** `describe pod` tem a seção `Containers:` que lista **cada container individualmente** com `State` (Running/Waiting/Terminated), `Reason`, `RestartCount` e `Last State`. Numa única chamada você vê quais estão saudáveis e quais estão em CrashLoopBackOff/OOMKilled/etc.
+- **Por que as outras erradas:**
+  - **`kubectl exec`** → executa um **comando dentro de UM container específico**. Não lista nem inspeciona — é manipulação, não diagnóstico. E pressupõe que você **já sabe** em qual container quer entrar.
+  - **`kubectl get pod`** → mostra agregado tipo `READY 1/2`. Sabe que **algum** container está mal, mas **não qual**. Visão por-pod, não por-container.
+  - **`kubectl logs`** → mostra logs de **um** container (via `-c`). Pra comparar todos teria que rodar N vezes, e mesmo assim só dá os logs (não o State do container).
+- **Mnemônico:** **GDLE — Get → Describe → Logs → Exec** (Sub-bloco 3.9 do Module 4 = ordem da menor invasão pra maior). Pra **identificar** containers com problema, você está em **D (Describe)**, não em E (Exec).
+- **Regra de desempate (cai sempre):**
+  - "Status de alto nível, visão geral" → **Get**
+  - "Qual container falhou? Por que K8s não escalou? Eventos do Pod?" → **Describe**
+  - "O que o app dentro do container disse?" → **Logs**
+  - "Quero rodar comando dentro do container" → **Exec**
