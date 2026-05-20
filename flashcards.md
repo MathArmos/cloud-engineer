@@ -433,3 +433,38 @@
   - "Qual container falhou? Por que K8s não escalou? Eventos do Pod?" → **Describe**
   - "O que o app dentro do container disse?" → **Logs**
   - "Quero rodar comando dentro do container" → **Exec**
+
+---
+
+### [3.3 — Cloud Run] Quiz Module 3 Q1 (2026-05-20): quais produtos podem construir containers (3)
+- **Errei porque:** marquei só Cloud Run + Docker (2/3). Esqueci de marcar **Construção em nuvem** (Cloud Build).
+- **Correto:** **Docker + Cloud Build + Cloud Run**.
+- **Por quê:**
+  - **Docker** → `docker build` local com Dockerfile.
+  - **Cloud Build** → `gcloud builds submit --tag` (Dockerfile) ou `--pack` (Buildpacks) — builda na infra do Google.
+  - **Cloud Run** → `gcloud run deploy --source .` faz build (via Cloud Build com Dockerfile OU Buildpacks), push e deploy de uma vez.
+- **Por que Registro de Artefatos (Artifact Registry) está errado:** AR é onde a imagem **fica armazenada**, não onde é construída. É registry/repository, não builder.
+- **Mnemônico:** "**Builder ≠ Registry.**" Docker/Cloud Build/Cloud Run buildam; Artifact Registry guarda. Lembrar do diagrama do Bloco 10.8 (3 caixas: Docker/Cloud Build/Cloud Run).
+
+---
+
+### [3.3 — Cloud Run] Quiz Module 3 Q2 (2026-05-20): integrar Cloud Run com APIs e recursos Google Cloud (3)
+- **Errei porque:** marquei "**Use a conta de serviço PADRÃO de tempo de execução** para acessar APIs do Google Cloud" — caí na pegadinha clássica. Achei que "default = recomendado". E esqueci de marcar **"Conecte-se aos serviços do Google Cloud usando bibliotecas de cliente"**.
+- **Correto:**
+  - ✅ **Secret Manager** para credenciais de DB
+  - ✅ **Serverless VPC Access** para recursos internos da VPC (Memorystore, Cloud SQL priv IP)
+  - ✅ **Bibliotecas de cliente** (client libraries) — pegam a SA do service automaticamente, geram token transparente
+- **Por que "conta de serviço padrão" está ERRADO:** a default SA do Cloud Run = **Compute Engine SA com role Editor no project** = read/write em **tudo**. Viola least privilege. Recomendação real: **criar SA per-service com apenas as permissões mínimas** (ex: só `roles/datastore.user` se só lê Firestore).
+- **Mnemônico:** "**Default SA = trap.**" Sempre que aparecer "default service account" como resposta certa numa questão de segurança, desconfie. Bloco 10.15 + 10.10.
+
+---
+
+### [3.3 — Cloud Run] Quiz Module 3 Q4 (2026-05-20): características de apps adequadas pro Cloud Run (3)
+- **Errei porque:** marquei "**A aplicação depende de um sistema de arquivos local persistente**" — não percebi que era a opção INVERTIDA (a única que **desqualifica** a app). E esqueci de marcar **"A aplicação está em um container"**.
+- **Correto:**
+  - ✅ **Está em um container** (ou linguagem suportada por Buildpacks: Go/Java/Node.js/Python/.NET)
+  - ✅ **Responde a request dentro do timeout** configurado (máx 1h)
+  - ✅ **Escuta HTTP em porta especificada** (`$PORT`, default 8080)
+- **Por que "FS local persistente" ELIMINA a app:** Cloud Run só oferece FS **efêmero in-memory** (tmpfs, consome RAM). Dados gravados **NÃO sobrevivem** ao restart da instância. Pra persistir: Filestore (NFS, exige 2nd gen), Cloud Storage FUSE, ou client libs pra DB.
+- **Mnemônico:** "**Cloud Run é amnésico.**" Cada nova container instance começa com FS zerado. Se app precisa "lembrar" entre requests via disco local → NÃO cabe. Vai pra Compute Engine ou GKE com Persistent Volume. Bloco 10.1.
+- **Cuidado da prova:** questões de "checklist de adequação" misturam **requisitos positivos** (container, HTTP, timeout) com **requisitos negativos** (não-persistente). A opção sobre FS persistente é o "distrator do distrator" — parece característica positiva, mas é a única que mata o fit.
