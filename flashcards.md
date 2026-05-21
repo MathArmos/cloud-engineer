@@ -468,3 +468,38 @@
 - **Por que "FS local persistente" ELIMINA a app:** Cloud Run só oferece FS **efêmero in-memory** (tmpfs, consome RAM). Dados gravados **NÃO sobrevivem** ao restart da instância. Pra persistir: Filestore (NFS, exige 2nd gen), Cloud Storage FUSE, ou client libs pra DB.
 - **Mnemônico:** "**Cloud Run é amnésico.**" Cada nova container instance começa com FS zerado. Se app precisa "lembrar" entre requests via disco local → NÃO cabe. Vai pra Compute Engine ou GKE com Persistent Volume. Bloco 10.1.
 - **Cuidado da prova:** questões de "checklist de adequação" misturam **requisitos positivos** (container, HTTP, timeout) com **requisitos negativos** (não-persistente). A opção sobre FS persistente é o "distrator do distrator" — parece característica positiva, mas é a única que mata o fit.
+
+---
+
+### [4.6 — Monitoring] Quiz "Monitoring critical systems" Q1 (2026-05-21): qual interface mostra um chart com ratio 500 / total responses
+- **Errei porque:** marquei **Metrics Explorer** — argumentei que a UI tem widget "Ratio" nativo (numerator/denominator). Isso é verdade no produto, mas é a leitura errada pro quiz.
+- **Correto:** **MQL** (Monitoring Query Language).
+- **Por que a leitura didática manda MQL:**
+  - **Metrics Explorer** = UI baseline pra plotar **uma** métrica
+  - **MQL/PromQL** = ferramentas pra **lógica entre métricas** (razão, percentil, agregação cross-resource)
+  - "Ratio 5xx / total" é o **exemplo canônico** que motiva ensinar query language no módulo. O quiz testa se você absorveu "queries complexas → linguagem", não "a UI faz tudo".
+- **Por que as outras estão erradas:**
+  - **Uptime check** → não plota nada, é sonda pra disponibilidade
+  - **Liveness probe** → K8s, decide se kubelet reinicia container
+- **Regra de desempate (cai sempre):**
+  - "Plotar **uma** métrica" → **Metrics Explorer**
+  - "**Razão**, **percentil**, **agregação cross-resource**" → **MQL** ou **PromQL**
+  - "Notificar quando app cai" → **Uptime check**
+  - "Probe interna do cluster" → **Liveness/Readiness probe**
+- **Mnemônico:** "**Uma métrica = Explorer. Operação entre métricas = linguagem.**"
+
+---
+
+### [4.6 — Monitoring] Quiz "Monitoring critical systems" Q3 (2026-05-21): notificar quando aplicação cai — qual ferramenta GCP
+- **Errei porque:** marquei **Health check** — confundi com a ferramenta de Cloud Monitoring. Health check em GCP é **outra coisa**.
+- **Correto:** **Uptime check** (Cloud Monitoring).
+- **Por que Health check está errado:** **Health check** em GCP é probe específico de **Load Balancer** — o LB usa pra decidir se manda tráfego pro backend (decisão de roteamento). **NÃO notifica admin** quando algo cai.
+- **Por que Uptime check é a resposta:** Uptime check é o serviço de Cloud Monitoring que faz sondagem HTTP/HTTPS/TCP de **múltiplas regiões geográficas**, valida DNS+TLS+200+latência, e quando falha **dispara alert policy → notification channel** (email/Slack/PagerDuty). É o "first line of defense" pra availability externa.
+- **Tabela de desambiguação (cai sempre):**
+  | Termo | Domínio | Pra quê |
+  |-------|---------|---------|
+  | **Uptime check** | Cloud Monitoring | Alertar on-call se app cai (black-box, externo) |
+  | **Health check** | Load Balancer | LB decide se manda tráfego pro backend |
+  | **Liveness probe** | K8s/GKE | kubelet decide se reinicia container |
+  | **Readiness probe** | K8s/GKE | Service decide se inclui pod no endpoint |
+- **Mnemônico:** "**Uptime = quem te acorda. Health = quem o LB consulta.** Liveness/Readiness moram no cluster."
